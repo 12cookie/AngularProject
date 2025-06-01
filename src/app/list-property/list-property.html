@@ -1,0 +1,163 @@
+<div class="list-property-container">
+    <header class="header">
+        <button class="back-btn" (click)="goBack()">← Back to Home</button>
+        <h1>List Your Property</h1>
+        <p class="subtitle">Fill in the details to list your property for rent</p>
+    </header>
+
+    <main class="form-container">
+        <form [formGroup]="propertyForm" (ngSubmit)="onSubmit()" class="property-form">
+
+            <!-- Owner Details Section -->
+            <div class="form-section">
+                <h2>Owner Details</h2>
+
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" formControlName="name" placeholder="Enter your full name"
+                        [class.error]="isFieldInvalid('name')" />
+                    <div class="error-message" *ngIf="isFieldInvalid('name')">
+                        Please enter your full name
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" formControlName="phone" placeholder="Enter your phone number"
+                        [class.error]="isFieldInvalid('phone')" />
+                    <div class="error-message" *ngIf="isFieldInvalid('phone')">
+                        Please enter a valid phone number
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" formControlName="email" placeholder="Enter your email address"
+                        [class.error]="isFieldInvalid('email')" />
+                    <div class="error-message" *ngIf="isFieldInvalid('email')">
+                        Please enter a valid email address
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Details Section -->
+            <div class="form-section">
+                <h2>Property Details</h2>
+
+                <div class="form-group">
+                    <label for="propertyType">Property Type *</label>
+                    <select id="propertyType" formControlName="propertyType"
+                        [class.error]="isFieldInvalid('propertyType')">
+                        <option value="">Select property type</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                        <option value="studio">Studio</option>
+                        <option value="room">Single Room</option>
+                    </select>
+                    <div class="error-message" *ngIf="isFieldInvalid('propertyType')">
+                        Please select a property type
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bedrooms">Bedrooms *</label>
+                        <select id="bedrooms" formControlName="bedrooms" [class.error]="isFieldInvalid('bedrooms')">
+                            <option value="">Select</option>
+                            <option value="1">1 BHK</option>
+                            <option value="2">2 BHK</option>
+                            <option value="3">3 BHK</option>
+                            <option value="4">4 BHK</option>
+                            <option value="5">5+ BHK</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bathrooms">Bathrooms *</label>
+                        <select id="bathrooms" formControlName="bathrooms" [class.error]="isFieldInvalid('bathrooms')">
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="area">Area (sq ft) *</label>
+                    <input type="number" id="area" formControlName="area" placeholder="Enter area in square feet"
+                        [class.error]="isFieldInvalid('area')" />
+                    <div class="error-message" *ngIf="isFieldInvalid('area')">
+                        Please enter the property area
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rent">Monthly Rent (₹) *</label>
+                    <input type="number" id="rent" formControlName="rent" placeholder="Enter monthly rent amount"
+                        [class.error]="isFieldInvalid('rent')" />
+                    <div class="error-message" *ngIf="isFieldInvalid('rent')">
+                        Please enter the monthly rent
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Complete Address *</label>
+                    <textarea id="address" formControlName="address"
+                        placeholder="Enter complete address including city, state, and pincode" rows="4"
+                        [class.error]="isFieldInvalid('address')"></textarea>
+                    <div class="error-message" *ngIf="isFieldInvalid('address')">
+                        Please enter the complete address
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Property Description</label>
+                    <textarea id="description" formControlName="description"
+                        placeholder="Describe your property, amenities, nearby facilities, etc." rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="amenities">Amenities</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="parking" />
+                            <span>Parking Available</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="furnished" />
+                            <span>Furnished</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="gym" />
+                            <span>Gym/Fitness Center</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="swimming" />
+                            <span>Swimming Pool</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="security" />
+                            <span>24/7 Security</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="elevator" />
+                            <span>Elevator</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="goBack()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn-primary" [disabled]="propertyForm.invalid">
+                    List Property
+                </button>
+            </div>
+        </form>
+    </main>
+</div>
