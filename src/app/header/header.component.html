@@ -1,0 +1,28 @@
+<header class="global-header">
+    <div class="header-container">
+        <div class="logo">
+            <h1>Find my home</h1>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div class="auth-section" *ngIf="!isAuthenticated">
+            <button class="login-btn" (click)="openAuthModal()">
+                Login / Sign Up
+            </button>
+        </div>
+        
+        <div class="user-section" *ngIf="isAuthenticated && currentUser">
+            <div class="user-info">
+                <span class="user-greeting">Hello, {{ currentUser.name }}!</span>
+                <button class="logout-btn" (click)="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <app-auth-modal 
+        [isVisible]="showAuthModal"
+        (closeModal)="closeAuthModal()"
+        (authSuccess)="onAuthSuccess()">
+    </app-auth-modal>
+</header>

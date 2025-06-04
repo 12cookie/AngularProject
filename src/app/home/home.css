@@ -1,86 +1,21 @@
 .home-container {
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
+    /* Adjust for header height */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 2rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.header {
+.hero-header {
     text-align: center;
     color: white;
     margin-bottom: 3rem;
-    position: relative;
+    padding-top: 2rem;
 }
 
-/* Authentication Section */
-.auth-section {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.login-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.login-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-}
-
-.user-section {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.user-greeting {
-    color: white;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.logout-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 1rem;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-}
-
-.header h1 {
+.hero-header h1 {
     font-size: 3rem;
-    margin: 2rem 0 0.5rem 0;
+    margin-bottom: 0.5rem;
     font-weight: 700;
 }
 
@@ -172,24 +107,13 @@
         padding: 1rem;
     }
 
-    .header {
+    .hero-header {
         margin-bottom: 2rem;
+        padding-top: 1rem;
     }
 
-    .auth-section,
-    .user-section {
-        position: static;
-        margin-bottom: 1rem;
-    }
-
-    .user-info {
-        justify-content: center;
-        padding: 0.5rem 1rem;
-    }
-
-    .header h1 {
+    .hero-header h1 {
         font-size: 2rem;
-        margin-top: 1rem;
     }
 
     .options-container {
@@ -200,13 +124,5 @@
 
     .option-card {
         padding: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .login-btn,
-    .user-info {
-        font-size: 0.8rem;
-        padding: 0.5rem 1rem;
     }
 }

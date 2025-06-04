@@ -1,0 +1,16 @@
+.app-layout {
+  display: grid;
+  grid-template-rows: auto 1fr; /* Header auto height, content takes remaining space */
+  /* Or if header has fixed height: grid-template-rows: 70px 1fr; */
+  height: 100vh;
+}
+
+.app-header-area {
+  /* No position:fixed needed here if using this grid layout for the whole page */
+  /* Your header styles */
+  background-color: #f0f0f0;
+}
+
+.app-content-area {
+  overflow-y: auto; /* Allow content to scroll if it's too long */
+}

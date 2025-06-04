@@ -11,9 +11,9 @@
 }
 
 .back-btn {
-    position: absolute;
+    /* position: sticky; */
     top: 2rem;
-    left: 2rem;
+    /* left: 2rem; */
     background: #667eea;
     color: white;
     border: none;
