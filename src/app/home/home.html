@@ -1,5 +1,20 @@
 <div class="home-container">
+    <!-- Header with Authentication -->
     <header class="header">
+        <!-- User Info / Login Button -->
+        <div class="auth-section" *ngIf="!isAuthenticated">
+            <button class="login-btn" (click)="openAuthModal()">
+                Login / Sign Up
+            </button>
+        </div>
+        
+        <div class="user-section" *ngIf="isAuthenticated && currentUser">
+            <div class="user-info">
+                <span class="user-greeting">Hello, {{ currentUser.name }}!</span>
+                <button class="logout-btn" (click)="logout()">Logout</button>
+            </div>
+        </div>
+
         <h1>Find Your Home</h1>
         <p class="subtitle">Your trusted partner in finding the perfect rental property</p>
     </header>
@@ -21,4 +36,11 @@
             </div>
         </div>
     </main>
+
+    <!-- Authentication Modal -->
+    <app-auth-modal 
+        [isVisible]="showAuthModal"
+        (closeModal)="closeAuthModal()"
+        (authSuccess)="onAuthSuccess()">
+    </app-auth-modal>
 </div>

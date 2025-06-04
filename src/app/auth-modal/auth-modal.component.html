@@ -1,0 +1,127 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="onClose()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 *ngIf="currentStep === 'login'">Welcome Back</h2>
+            <h2 *ngIf="currentStep === 'signup'">Create Account</h2>
+            <h2 *ngIf="currentStep === 'otp'">Enter OTP</h2>
+            <button class="close-btn" (click)="onClose()">×</button>
+        </div>
+
+        <div class="modal-body">
+
+            <!-- Login/Signup Form -->
+            <form *ngIf="currentStep === 'login' || currentStep === 'signup'" [formGroup]="authForm"
+                (ngSubmit)="onSubmitAuth()" class="auth-form">
+
+                <!-- Name field (only for signup) -->
+                <div class="form-group" *ngIf="currentStep === 'signup'">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" formControlName="name" placeholder="Enter your full name"
+                        [class.error]="isFieldInvalid(authForm, 'name')" />
+                    <div class="error-message" *ngIf="isFieldInvalid(authForm, 'name')">
+                        Please enter your full name
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" formControlName="phone" placeholder="Enter your 10-digit phone number"
+                        [class.error]="isFieldInvalid(authForm, 'phone')" />
+                    <div class="error-message" *ngIf="isFieldInvalid(authForm, 'phone')">
+                        Please enter a valid phone number
+                    </div>
+                </div>
+
+                <!-- Email field (only for signup) -->
+                <div class="form-group" *ngIf="currentStep === 'signup'">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" formControlName="email"
+                        placeholder="Enter your email address (optional)"
+                        [class.error]="isFieldInvalid(authForm, 'email')" />
+                    <div class="error-message" *ngIf="isFieldInvalid(authForm, 'email')">
+                        Please enter a valid email address
+                    </div>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div class="message error-message" *ngIf="errorMessage">
+                    {{ errorMessage }}
+                </div>
+                <div class="message success-message" *ngIf="successMessage">
+                    {{ successMessage }}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary submit-btn" [disabled]="isLoading || authForm.invalid">
+                    <span *ngIf="!isLoading">
+                        {{ currentStep === 'login' ? 'Send OTP' : 'Create Account & Send OTP' }}
+                    </span>
+                    <span *ngIf="isLoading" class="loading-spinner">
+                        Sending OTP...
+                    </span>
+                </button>
+
+                <!-- Switch between Login/Signup -->
+                <div class="form-footer">
+                    <p *ngIf="currentStep === 'login'">
+                        Don't have an account?
+                        <button type="button" class="link-btn" (click)="switchToSignup()">Sign up</button>
+                    </p>
+                    <p *ngIf="currentStep === 'signup'">
+                        Already have an account?
+                        <button type="button" class="link-btn" (click)="switchToLogin()">Login</button>
+                    </p>
+                </div>
+            </form>
+
+            <!-- OTP Verification Form -->
+            <form *ngIf="currentStep === 'otp'" [formGroup]="otpForm" (ngSubmit)="onSubmitOTP()" class="otp-form">
+
+                <div class="otp-info">
+                    <p>We've sent a 6-digit OTP to <strong>{{ pendingPhone }}</strong></p>
+                    <p class="otp-hint">Enter the OTP below to verify your phone number</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="otp">Enter OTP *</label>
+                    <input type="text" id="otp" formControlName="otp" placeholder="Enter 6-digit OTP" maxlength="6"
+                        class="otp-input" [class.error]="isFieldInvalid(otpForm, 'otp')" />
+                    <div class="error-message" *ngIf="isFieldInvalid(otpForm, 'otp')">
+                        Please enter a valid 6-digit OTP
+                    </div>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div class="message error-message" *ngIf="errorMessage">
+                    {{ errorMessage }}
+                </div>
+                <div class="message success-message" *ngIf="successMessage">
+                    {{ successMessage }}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-primary submit-btn" [disabled]="isLoading || otpForm.invalid">
+                    <span *ngIf="!isLoading">Verify OTP</span>
+                    <span *ngIf="isLoading" class="loading-spinner">
+                        Verifying...
+                    </span>
+                </button>
+
+                <!-- Resend OTP -->
+                <div class="otp-footer">
+                    <p>Didn't receive OTP?</p>
+                    <button type="button" class="link-btn" (click)="resendOTP()" [disabled]="isLoading">
+                        Resend OTP
+                    </button>
+                </div>
+
+                <!-- Demo Instructions -->
+                <div class="demo-info">
+                    <p><strong>For demo:</strong> Use OTP: <code>123456</code></p>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

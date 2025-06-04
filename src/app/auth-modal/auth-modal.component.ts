@@ -1,0 +1,168 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.services';
+
+@Component({
+    selector: 'app-auth-modal',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: 'auth-modal.component.html',
+    styleUrls: ['auth-modal.component.css']
+})
+export class AuthModalComponent {
+    
+    @Input() isVisible = false;
+    @Output() closeModal = new EventEmitter<void>();
+    @Output() authSuccess = new EventEmitter<void>();
+
+    authForm: FormGroup;
+    otpForm: FormGroup;
+
+    currentStep: 'login' | 'signup' | 'otp' = 'login';
+    isLoading = false;
+    errorMessage = '';
+    successMessage = '';
+
+    // Store phone number for OTP verification
+    pendingPhone = '';
+    pendingUserData: any = null;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService
+    ) {
+        this.authForm = this.formBuilder.group({
+            name: [''],
+            phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+            email: ['']
+        });
+
+        this.otpForm = this.formBuilder.group({
+            otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+        });
+    }
+
+    switchToLogin() {
+        this.currentStep = 'login';
+        this.authForm.patchValue({ name: '', email: '' });
+        this.authForm.get('name')?.clearValidators();
+        this.authForm.get('email')?.clearValidators();
+        this.authForm.get('name')?.updateValueAndValidity();
+        this.authForm.get('email')?.updateValueAndValidity();
+        this.clearMessages();
+    }
+
+    switchToSignup() {
+        this.currentStep = 'signup';
+        this.authForm.get('name')?.setValidators([Validators.required, Validators.minLength(2)]);
+        this.authForm.get('email')?.setValidators([Validators.email]);
+        this.authForm.get('name')?.updateValueAndValidity();
+        this.authForm.get('email')?.updateValueAndValidity();
+        this.clearMessages();
+    }
+
+    async onSubmitAuth() {
+        if (this.authForm.invalid) {
+            this.markFormGroupTouched(this.authForm);
+            return;
+        }
+
+        this.isLoading = true;
+        this.clearMessages();
+
+        const formData = this.authForm.value;
+        this.pendingPhone = formData.phone;
+        this.pendingUserData = formData;
+
+        try {
+            const otpSent = await this.authService.sendOTP(formData.phone);
+
+            if (otpSent) {
+                this.currentStep = 'otp';
+                this.successMessage = 'OTP sent successfully! Please check your phone.';
+            } else {
+                this.errorMessage = 'Failed to send OTP. Please try again.';
+            }
+        } catch (error) {
+            this.errorMessage = 'An error occurred. Please try again.';
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    async onSubmitOTP() {
+        if (this.otpForm.invalid) {
+            this.markFormGroupTouched(this.otpForm);
+            return;
+        }
+
+        this.isLoading = true;
+        this.clearMessages();
+
+        const otp = this.otpForm.value.otp;
+
+        try {
+            const isValidOTP = await this.authService.verifyOTP(this.pendingPhone, otp);
+
+            if (isValidOTP) {
+                // OTP verified, login the user
+                this.authService.login(this.pendingUserData);
+                this.successMessage = 'Authentication successful!';
+
+                setTimeout(() => {
+                    this.authSuccess.emit();
+                    this.onClose();
+                }, 1000);
+            } else {
+                this.errorMessage = 'Invalid OTP. Please try again.';
+            }
+        } catch (error) {
+            this.errorMessage = 'An error occurred during verification. Please try again.';
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    resendOTP() {
+        this.isLoading = true;
+        this.clearMessages();
+
+        this.authService.sendOTP(this.pendingPhone).then(success => {
+            if (success) {
+                this.successMessage = 'OTP resent successfully!';
+            } else {
+                this.errorMessage = 'Failed to resend OTP. Please try again.';
+            }
+            this.isLoading = false;
+        });
+    }
+
+    onClose() {
+        this.isVisible = false;
+        this.currentStep = 'login';
+        this.authForm.reset();
+        this.otpForm.reset();
+        this.clearMessages();
+        this.pendingPhone = '';
+        this.pendingUserData = null;
+        this.closeModal.emit();
+    }
+
+    isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
+        const field = formGroup.get(fieldName);
+        return !!(field && field.invalid && (field.dirty || field.touched));
+    }
+
+    private markFormGroupTouched(formGroup: FormGroup) {
+        Object.keys(formGroup.controls).forEach(key => {
+            const control = formGroup.get(key);
+            control?.markAsTouched();
+        });
+    }
+
+    private clearMessages() {
+        this.errorMessage = '';
+        this.successMessage = '';
+    }
+}

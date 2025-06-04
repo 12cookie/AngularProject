@@ -21,7 +21,7 @@ export class ListPropertyComponent {
       // Owner details
       name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
       
       // Property details
       propertyType: ['', Validators.required],
