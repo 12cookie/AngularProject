@@ -3,6 +3,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.services';
 
+interface CountryCode {
+    code: string;
+    name: string;
+    phoneLength: number;
+}
+
 @Component({
     selector: 'app-auth-modal',
     standalone: true,
@@ -28,19 +34,44 @@ export class AuthModalComponent {
     pendingPhone = '';
     pendingUserData: any = null;
 
+    // Country codes data
+    countryCodes: CountryCode[] = [
+        { code: '+91', name: 'India', phoneLength: 10 },
+        { code: '+1', name: 'United States', phoneLength: 10 },
+        { code: '+44', name: 'United Kingdom', phoneLength: 10 },
+        { code: '+61', name: 'Australia', phoneLength: 9 },
+        { code: '+33', name: 'France', phoneLength: 10 },
+        { code: '+49', name: 'Germany', phoneLength: 11 },
+        { code: '+86', name: 'China', phoneLength: 11 },
+        { code: '+81', name: 'Japan', phoneLength: 10 },
+        { code: '+82', name: 'South Korea', phoneLength: 10 },
+        { code: '+65', name: 'Singapore', phoneLength: 8 },
+        { code: '+971', name: 'UAE', phoneLength: 9 },
+        { code: '+966', name: 'Saudi Arabia', phoneLength: 9 },
+        { code: '+52', name: 'Mexico', phoneLength: 10 },
+        { code: '+55', name: 'Brazil', phoneLength: 11 },
+        { code: '+7', name: 'Russia', phoneLength: 10 }
+    ];
+
+    selectedCountryCode: CountryCode = this.countryCodes[0];
+    isCountryDropdownOpen = false;
+
     constructor(
         private formBuilder: FormBuilder,
         private authService: AuthService
     ) {
         this.authForm = this.formBuilder.group({
             name: [''],
-            phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+            countryCode: [this.selectedCountryCode.code],
+            phone: ['', [Validators.required]],
             email: ['']
         });
 
         this.otpForm = this.formBuilder.group({
             otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
         });
+
+        this.updatePhoneValidation();
     }
 
     switchToLogin() {
@@ -62,6 +93,47 @@ export class AuthModalComponent {
         this.clearMessages();
     }
 
+    selectCountryCode(country: CountryCode) {
+        this.selectedCountryCode = country;
+        this.authForm.patchValue({ countryCode: country.code });
+        this.isCountryDropdownOpen = false;
+        this.updatePhoneValidation();
+        this.authForm.get('phone')?.updateValueAndValidity();
+    }
+
+    toggleCountryDropdown() {
+        this.isCountryDropdownOpen = !this.isCountryDropdownOpen;
+    }
+
+    closeCountryDropdown() {
+        this.isCountryDropdownOpen = false;
+    }
+
+    private updatePhoneValidation() {
+        const phoneControl = this.authForm.get('phone');
+        if (phoneControl) {
+            
+            let pattern: RegExp;
+            
+            if (this.selectedCountryCode.code === '+91') {
+                pattern = /^[6-9]\d{9}$/;
+            } else {
+                const expectedLength = this.selectedCountryCode.phoneLength;
+                pattern = new RegExp(`^\\d{${expectedLength}}$`);
+            }
+            
+            phoneControl.setValidators([Validators.required, Validators.pattern(pattern)]);
+            phoneControl.updateValueAndValidity();
+        }
+    }
+
+    getPhoneNumberPlaceholder(): string {
+        if (this.selectedCountryCode.code === '+91') {
+            return 'Enter your 10-digit phone number';
+        }
+        return `Enter your ${this.selectedCountryCode.phoneLength}-digit phone number`;
+    }
+
     async onSubmitAuth() {
         if (this.authForm.invalid) {
             this.markFormGroupTouched(this.authForm);
@@ -72,11 +144,12 @@ export class AuthModalComponent {
         this.clearMessages();
 
         const formData = this.authForm.value;
-        this.pendingPhone = formData.phone;
-        this.pendingUserData = formData;
+        const fullPhoneNumber = formData.countryCode + formData.phone;
+        this.pendingPhone = fullPhoneNumber;
+        this.pendingUserData = { ...formData, phone: fullPhoneNumber };
 
         try {
-            const otpSent = await this.authService.sendOTP(formData.phone);
+            const otpSent = await this.authService.sendOTP(fullPhoneNumber);
 
             if (otpSent) {
                 this.currentStep = 'otp';
@@ -146,6 +219,9 @@ export class AuthModalComponent {
         this.clearMessages();
         this.pendingPhone = '';
         this.pendingUserData = null;
+        this.isCountryDropdownOpen = false;
+        this.selectedCountryCode = this.countryCodes[0];
+        this.authForm.patchValue({ countryCode: this.selectedCountryCode.code });
         this.closeModal.emit();
     }
 

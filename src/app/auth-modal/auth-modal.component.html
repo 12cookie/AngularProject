@@ -23,11 +23,31 @@
                     </div>
                 </div>
 
-                <!-- Phone Number -->
+                <!-- Phone Number with Country Code -->
                 <div class="form-group">
                     <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" formControlName="phone" placeholder="Enter your 10-digit phone number"
-                        [class.error]="isFieldInvalid(authForm, 'phone')" />
+                    <div class="phone-input-container">
+                        <!-- Country Code Dropdown -->
+                        <div class="country-code-dropdown" (clickOutside)="closeCountryDropdown()">
+                            <button type="button" class="country-code-btn" (click)="toggleCountryDropdown()">
+                                <span class="code">{{ selectedCountryCode.code }}</span>
+                                <span class="dropdown-arrow" [class.open]="isCountryDropdownOpen">▼</span>
+                            </button>
+
+                            <div class="country-dropdown-menu" *ngIf="isCountryDropdownOpen">
+                                <div class="country-option" *ngFor="let country of countryCodes"
+                                    (click)="selectCountryCode(country)"
+                                    [class.selected]="country.code === selectedCountryCode.code">
+                                    <span class="code">{{ country.code }}</span>
+                                    <span class="name">{{ country.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone Number Input -->
+                        <input type="tel" id="phone" formControlName="phone" [placeholder]="getPhoneNumberPlaceholder()"
+                            [class.error]="isFieldInvalid(authForm, 'phone')" class="phone-input" />
+                    </div>
                     <div class="error-message" *ngIf="isFieldInvalid(authForm, 'phone')">
                         Please enter a valid phone number
                     </div>
