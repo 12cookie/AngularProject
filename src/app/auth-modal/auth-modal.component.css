@@ -100,6 +100,8 @@ input {
     border-radius: 0.5rem;
     font-size: 1rem;
     transition: border-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 input:focus {
@@ -111,31 +113,30 @@ input.error {
     border-color: #e74c3c;
 }
 
-/* Phone Input Container */
-.phone-input-container {
-    display: flex;
-    gap: 0;
-    position: relative;
-}
-
+/* Country Code Dropdown - Full Width */
 .country-code-dropdown {
     position: relative;
-    display: inline-block;
+    display: block;
+    width: 100%;
 }
 
 .country-code-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
+    justify-content: space-between;
+    padding: 0.75rem;
     border: 2px solid #e1e5e9;
-    border-right: none;
-    border-radius: 0.5rem 0 0 0.5rem;
+    border-radius: 0.5rem;
     background: #f8f9fa;
     cursor: pointer;
     font-size: 1rem;
     transition: all 0.3s ease;
-    min-width: 90px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.country-code-btn.full-width {
+    width: 100%;
 }
 
 .country-code-btn:hover {
@@ -148,33 +149,33 @@ input.error {
     border-color: #667eea;
 }
 
-.country-code-btn .code {
-    font-weight: 600;
-    color: #333;
+.country-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
 }
 
-.country-code-btn .dropdown-arrow {
+.country-display .code {
+    font-weight: 600;
+    color: #333;
+    min-width: 60px;
+}
+
+.country-display .name {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.dropdown-arrow {
     font-size: 0.8rem;
     color: #666;
     transition: transform 0.3s ease;
+    margin-left: auto;
 }
 
-.country-code-btn .dropdown-arrow.open {
+.dropdown-arrow.open {
     transform: rotate(180deg);
-}
-
-.phone-input {
-    flex: 1;
-    border-left: none !important;
-    border-radius: 0 0.5rem 0.5rem 0 !important;
-}
-
-.phone-input:focus {
-    border-color: #667eea !important;
-}
-
-.phone-input.error {
-    border-color: #e74c3c !important;
 }
 
 /* Country Dropdown Menu */
@@ -433,29 +434,7 @@ input.error {
         letter-spacing: 0.25rem;
     }
 
-    .phone-input-container {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .country-code-btn {
-        border-radius: 0.5rem;
-        border-right: 2px solid #e1e5e9;
-        min-width: auto;
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .phone-input {
-        border-radius: 0.5rem !important;
-        border-left: 2px solid #e1e5e9 !important;
-    }
-
     .country-dropdown-menu {
-        position: fixed;
-        top: auto;
-        left: 1rem;
-        right: 1rem;
         max-height: 150px;
     }
 
@@ -465,6 +444,10 @@ input.error {
     }
 
     .country-option .name {
+        font-size: 0.8rem;
+    }
+
+    .country-display .name {
         font-size: 0.8rem;
     }
 }
