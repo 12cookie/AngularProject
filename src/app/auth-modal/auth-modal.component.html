@@ -98,20 +98,41 @@
                 </div>
             </form>
 
-            <!-- OTP Verification Form -->
             <form *ngIf="currentStep === 'otp'" [formGroup]="otpForm" (ngSubmit)="onSubmitOTP()" class="otp-form">
 
                 <div class="otp-info">
-                    <p>We've sent a 6-digit OTP to <strong>{{ pendingPhone }}</strong></p>
+                    <p>We've sent a 6-digit OTP to:</p>
+                    <p>{{ pendingPhone }}</p>
                     <p class="otp-hint">Enter the OTP below to verify your phone number</p>
                 </div>
 
                 <div class="form-group">
-                    <label for="otp">Enter OTP *</label>
-                    <input type="text" id="otp" formControlName="otp" placeholder="Enter 6-digit OTP" maxlength="6"
-                        class="otp-input" [class.error]="isFieldInvalid(otpForm, 'otp')" />
-                    <div class="error-message" *ngIf="isFieldInvalid(otpForm, 'otp')">
-                        Please enter a valid 6-digit OTP
+                    <!-- <label class="otp-label">Enter OTP</label> -->
+
+                    <!-- Individual OTP Input Boxes -->
+                    <div class="otp-inputs-container">
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput0
+                            (input)="onOtpDigitInput($event, 0)" (keydown)="onOtpKeyDown($event, 0)"
+                            (paste)="onOtpPaste($event)" [class.error]="otpError" autocomplete="off" />
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput1
+                            (input)="onOtpDigitInput($event, 1)" (keydown)="onOtpKeyDown($event, 1)"
+                            [class.error]="otpError" autocomplete="off" />
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput2
+                            (input)="onOtpDigitInput($event, 2)" (keydown)="onOtpKeyDown($event, 2)"
+                            [class.error]="otpError" autocomplete="off" />
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput3
+                            (input)="onOtpDigitInput($event, 3)" (keydown)="onOtpKeyDown($event, 3)"
+                            [class.error]="otpError" autocomplete="off" />
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput4
+                            (input)="onOtpDigitInput($event, 4)" (keydown)="onOtpKeyDown($event, 4)"
+                            [class.error]="otpError" autocomplete="off" />
+                        <input type="text" class="otp-digit-input" maxlength="1" #otpInput5
+                            (input)="onOtpDigitInput($event, 5)" (keydown)="onOtpKeyDown($event, 5)"
+                            [class.error]="otpError" autocomplete="off" />
+                    </div>
+
+                    <div class="error-message" *ngIf="otpError">
+                        {{ otpErrorMessage }}
                     </div>
                 </div>
 
@@ -123,25 +144,20 @@
                     {{ successMessage }}
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn-primary submit-btn" [disabled]="isLoading || otpForm.invalid">
-                    <span *ngIf="!isLoading">Verify OTP</span>
-                    <span *ngIf="isLoading" class="loading-spinner">
-                        Verifying...
-                    </span>
-                </button>
-
-                <!-- Resend OTP -->
+                <!-- Resend OTP Section -->
                 <div class="otp-footer">
-                    <p>Didn't receive OTP?</p>
-                    <button type="button" class="link-btn" (click)="resendOTP()" [disabled]="isLoading">
-                        Resend OTP
-                    </button>
-                </div>
+                    <div class="resend-section">
+                        <p *ngIf="!canResend">Didn't receive OTP?</p>
+                        <p *ngIf="canResend && resendTimer > 0" class="timer-text">
+                            Resend OTP in <span class="timer">{{ resendTimer }}s</span>
+                        </p>
 
-                <!-- Demo Instructions -->
-                <div class="demo-info">
-                    <p><strong>For demo:</strong> Use OTP: <code>123456</code></p>
+                        <button type="button" class="link-btn resend-btn" (click)="resendOTP()"
+                            [disabled]="isLoading || (canResend && resendTimer > 0)"
+                            *ngIf="!canResend || resendTimer === 0">
+                            Resend OTP
+                        </button>
+                    </div>
                 </div>
             </form>
 
