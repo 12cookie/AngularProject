@@ -112,7 +112,6 @@ input.error {
     border-color: #e74c3c;
 }
 
-/* Country Code Dropdown - Full Width */
 .country-code-dropdown {
     position: relative;
     display: block;
@@ -177,7 +176,6 @@ input.error {
     transform: rotate(180deg);
 }
 
-/* Country Dropdown Menu */
 .country-dropdown-menu {
     position: absolute;
     top: 100%;
@@ -337,7 +335,6 @@ input.error {
     cursor: not-allowed;
 }
 
-/* Mobile Responsive */
 @media (max-width: 480px) {
     .modal-container {
         width: 95%;
@@ -379,7 +376,6 @@ input.error {
     }
 }
 
-/* Enhanced OTP Styles */
 .otp-form {
     display: flex;
     flex-direction: column;
@@ -432,7 +428,6 @@ input.error {
     margin-bottom: 1rem;
 }
 
-/* Individual OTP Input Styling */
 .otp-inputs-container {
     display: flex;
     gap: 0.75rem;
@@ -479,7 +474,6 @@ input.error {
     75% { transform: translateX(5px); }
 }
 
-/* Enhanced Submit Button */
 .submit-btn {
     padding: 1rem 2rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -574,7 +568,6 @@ input.error {
     font-size: 0.8rem;
 }
 
-/* Enhanced Loading Spinner */
 .loading-spinner {
     display: flex;
     align-items: center;
@@ -592,7 +585,6 @@ input.error {
     animation: spin 1s linear infinite;
 }
 
-/* Mobile Responsive Enhancements */
 @media (max-width: 480px) {
     .otp-inputs-container {
         gap: 0.5rem;
@@ -632,7 +624,6 @@ input.error {
     }
 }
 
-/* Success Animation */
 @keyframes successPulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
